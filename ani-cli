@@ -455,6 +455,15 @@ case "$search" in
         [ -z "$result" ] && exit 1
         title=$(printf "%s" "$result" | cut -f2)
         allanime_title="$(printf "%s" "$title" | cut -d'(' -f1 | tr -d '[:punct:]')"
+
+        mkdir -p "$HOME/animes"
+        if [ ! -f "$HOME/animes/searched.txt" ]; then
+            touch $HOME/animes/searched.txt
+        fi
+        if ! grep -q "$allanime_title" "$HOME/animes/searched.txt"; then
+            echo "$allanime_title" >> "$HOME/animes/searched.txt"
+        fi
+
         id=$(printf "%s" "$result" | cut -f1)
         ep_list=$(episodes_list "$id")
         [ -z "$ep_no" ] && ep_no=$(printf "%s" "$ep_list" | nth "Select episode: " "$multi_selection_flag")
